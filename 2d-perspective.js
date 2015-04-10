@@ -12,12 +12,22 @@
         }
     }
 
-    var Position = perspective.Position = function(x, y){
+    function throwOnInvalidArguments(x, y) {
         throwOnMissingArgument(x);
         throwOnMissingArgument(y);
         throwOnNonNumberArgument(x);
         throwOnNonNumberArgument(y);
+    }
+
+    var Position = perspective.Position = function(x, y) {
+        throwOnInvalidArguments(x, y);
         this.x = x;
         this.y = y;
     };
+    Position.prototype.placeAt = function(x, y) {
+        throwOnInvalidArguments(x, y);
+        this.x = x;
+        this.y = y;
+    }
+
 })(window.perspective = window.perspective || {})

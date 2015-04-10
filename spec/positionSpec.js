@@ -45,4 +45,53 @@ describe('Position', function(){
             expect(position.y).toBe(y);
         });
     });
+
+    describe('placeAt', function(){
+        var position;
+
+        beforeEach(function(){
+            position = new perspective.Position(0, 0);
+        });
+
+        it('should throw on missing \'x\' argument', function(){
+            function placeAtWithoutX(){
+                position.placeAt(1, undefined);
+            }
+
+            expect(placeAtWithoutX).toThrow(Error('missing argument'));
+        });
+
+        it('should throw on missing \'y\' argument', function(){
+            function placeAtWithoutY(){
+                position.placeAt(1, undefined);
+            }
+
+            expect(placeAtWithoutY).toThrow(Error('missing argument'));
+        });
+
+        it('should throw on non-number \'x\' argument', function(){
+            function placeAtWithNonNumberX(){
+                position.placeAt('a', 1);
+            }
+
+            expect(placeAtWithNonNumberX).toThrow(Error('no number argument'));
+        });
+
+        it('should throw on non-number \'y\' argument', function(){
+            function placeAtWithNonNumberY(){
+                position.placeAt(1, 'b');
+            }
+
+            expect(placeAtWithNonNumberY).toThrow(Error('no number argument'));
+        });
+
+        it('should change \'x\' and \'y\' fields', function(){
+            var x = 2, y = 3;
+
+            position.placeAt(x, y);
+
+            expect(position.x).toBe(x);
+            expect(position.y).toBe(y);
+        });
+    });
 });
