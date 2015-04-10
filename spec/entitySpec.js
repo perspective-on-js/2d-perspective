@@ -31,6 +31,37 @@ describe('Entity', function(){
 
             expect(entity.orientation).toBe(expectedOrientation);
         });
+    });
 
+    describe('orientateTo', function(){
+        var entity;
+
+        beforeEach(function(){
+            entity = new perspective.Entity(0, 0, 0);
+        });
+
+        it('should throw on missing \'orientation\' argument', function(){
+            function orientEntityWithoutOrientation(){
+                entity.orientateTo(undefined);
+            }
+
+            expect(orientEntityWithoutOrientation).toThrow(Error('missing argument'));
+        });
+
+        it('should throw on non-number \'orientation\' argument', function(){
+            function orientEntityWithNonNumberOrientation(){
+                entity.orientateTo('a');
+            }
+
+            expect(orientEntityWithNonNumberOrientation).toThrow(Error('no number argument'));
+        });
+
+        it('should change \'orientation\' field', function(){
+            var expectedOrientation = Math.PI;
+
+            entity.orientateTo(expectedOrientation);
+
+            expect(entity.orientation).toBe(expectedOrientation);
+        });
     });
 });

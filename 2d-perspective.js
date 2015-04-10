@@ -25,7 +25,7 @@
         }
     }
 
-    function throwOnInvalidArguments(x, y) {
+    function throwOnInvalidPositionArguments(x, y) {
         throwOnMissingArgument(x);
         throwOnMissingArgument(y);
         throwOnNonNumberArgument(x);
@@ -34,25 +34,33 @@
 
     var Position = perspective.Position = function(x, y) {
         Observable.call(this);
-        throwOnInvalidArguments(x, y);
+        throwOnInvalidPositionArguments(x, y);
         this.x = x;
         this.y = y;
     };
     Position.prototype = Object.create(Observable.prototype);
     Position.prototype.constructor = Position;
     Position.prototype.placeAt = function(x, y) {
-        throwOnInvalidArguments(x, y);
+        throwOnInvalidPositionArguments(x, y);
         var oldX = this.x, oldY = this.y;
         this.x = x; this.y = y;
         this.emit('moved', this.x, this.y, oldX, oldY);
-    }
+    };
+
+    function throwOnInvalidOrientateArguments(orientation){
+        throwOnMissingArgument(orientation);
+        throwOnNonNumberArgument(orientation);
+    };
 
     var Entity = perspective.Entity = function(x, y, orientation){
         Position.call(this, x, y);
-        throwOnMissingArgument(orientation);
-        throwOnNonNumberArgument(orientation);
+        throwOnInvalidOrientateArguments(orientation);
         this.orientation = orientation;
     };
     Entity.prototype = Object.create(Position.prototype);
     Entity.prototype.constructor = Entity;
+    Entity.prototype.orientateTo = function(orientation){
+        throwOnInvalidOrientateArguments(orientation);
+        this.orientation = orientation;
+    };
 })(window.perspective = window.perspective || {})
