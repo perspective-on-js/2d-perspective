@@ -61,6 +61,8 @@
     Entity.prototype.constructor = Entity;
     Entity.prototype.orientateTo = function(orientation){
         throwOnInvalidOrientateArguments(orientation);
+        var oldOrientation = this.orientation;
         this.orientation = orientation;
+        this.emit('orientated', this.orientation, oldOrientation);
     };
 })(window.perspective = window.perspective || {})

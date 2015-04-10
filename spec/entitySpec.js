@@ -64,4 +64,35 @@ describe('Entity', function(){
             expect(entity.orientation).toBe(expectedOrientation);
         });
     });
+
+    describe('events', function(){
+        var entity;
+
+        beforeEach(function(){
+            entity = new perspective.Entity(0, 0, 0);
+        });
+
+        describe('orientated', function(){
+            it('should be emitted on \'orientateTo\'', function(){
+                var notified = false;
+                entity.on('orientated', function(){ notified = true; });
+
+                entity.orientateTo(Math.PI);
+
+                expect(notified).toBeTruthy();
+            });
+
+            it('should pass current orientation and old orientation', function(){
+                var actualOrientation, actualOldOrientation;
+                entity.on('orientated', function(orientation, oldOrientation){
+                    actualOrientation = orientation; actualOldOrientation = oldOrientation
+                });
+
+                entity.orientateTo(Math.PI);
+
+                expect(actualOrientation).toBe(Math.PI);
+                expect(actualOldOrientation).toBe(0);
+            });
+});
+    });
 });
