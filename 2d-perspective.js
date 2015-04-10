@@ -46,4 +46,13 @@
         this.x = x; this.y = y;
         this.emit('moved', this.x, this.y, oldX, oldY);
     }
+
+    var Entity = perspective.Entity = function(x, y, orientation){
+        Position.call(this, x, y);
+        throwOnMissingArgument(orientation);
+        throwOnNonNumberArgument(orientation);
+        this.orientation = orientation;
+    };
+    Entity.prototype = Object.create(Position.prototype);
+    Entity.prototype.constructor = Entity;
 })(window.perspective = window.perspective || {})
