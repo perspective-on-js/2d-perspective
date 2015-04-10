@@ -1,0 +1,20 @@
+{
+  "name": "2d-perspective",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "A 2d model to explain perspective",
+  "main": "2d-perspective.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "SpecRunner.html",
+    "spec",
+    "package.json",
+    "gulpFile.js"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine": "~2.1.3"
+  }
+}
