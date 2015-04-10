@@ -94,4 +94,8 @@ describe('Position', function(){
             expect(position.y).toBe(y);
         });
     });
+
+    it('should be Observable', function(){
+        expect((new perspective.Position(0,0)) instanceof perspective.Observable).toBeTruthy();
+    });
 });

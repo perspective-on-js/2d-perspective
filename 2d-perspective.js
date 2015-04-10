@@ -33,10 +33,13 @@
     }
 
     var Position = perspective.Position = function(x, y) {
+        Observable.call(this);
         throwOnInvalidArguments(x, y);
         this.x = x;
         this.y = y;
     };
+    Position.prototype = Object.create(Observable.prototype);
+    Position.prototype.constructor = Position;
     Position.prototype.placeAt = function(x, y) {
         throwOnInvalidArguments(x, y);
         this.x = x;
