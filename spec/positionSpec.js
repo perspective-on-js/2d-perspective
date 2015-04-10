@@ -98,4 +98,37 @@ describe('Position', function(){
     it('should be Observable', function(){
         expect((new perspective.Position(0,0)) instanceof perspective.Observable).toBeTruthy();
     });
+
+    describe('event', function(){
+        var position;
+
+        beforeEach(function(){
+            position = new perspective.Position(0, 1);
+        });
+
+        describe('\'moved\'', function(){
+            it('should be emitted on \'placeAt\'', function(){
+                var notified = false;
+                position.on('moved', function(){ notified = true; });
+
+                position.placeAt(1, 1);
+
+                expect(notified).toBeTruthy();
+            });
+
+            it('should be pass current \'x\' & \'y\' and previous \'x\' & \'y\'', function(){
+                var actualX, actualY, actualOldX, actualOldY;
+                position.on('moved', function(x, y, oldX, oldY){
+                    actualX = x; actualY = y; actualOldX = oldX; actualOldY = oldY;
+                });
+
+                position.placeAt(2, 3);
+
+                expect(actualX).toBe(2);
+                expect(actualY).toBe(3);
+                expect(actualOldX).toBe(0);
+                expect(actualOldY).toBe(1);
+            });
+        });
+    });
 });

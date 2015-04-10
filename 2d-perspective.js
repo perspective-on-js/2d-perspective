@@ -42,8 +42,8 @@
     Position.prototype.constructor = Position;
     Position.prototype.placeAt = function(x, y) {
         throwOnInvalidArguments(x, y);
-        this.x = x;
-        this.y = y;
+        var oldX = this.x, oldY = this.y;
+        this.x = x; this.y = y;
+        this.emit('moved', this.x, this.y, oldX, oldY);
     }
-
 })(window.perspective = window.perspective || {})
