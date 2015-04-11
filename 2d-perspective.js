@@ -114,6 +114,7 @@
         this.options = extend(options || {}, { radius: 5 });
         this.model = model;
         this.context = context;
+        this.model.on('moved', this.update.bind(this));
         this.update();
     };
     EyeView.prototype.update = function(){
@@ -127,6 +128,7 @@
         this.options = extend(options || {}, { width: 100 });
         this.model = model;
         this.context = context;
+        this.model.on('moved', this.update.bind(this));
         this.update();
     };
     ScreenView.prototype.update = function(){
@@ -145,6 +147,7 @@
         this.options = extend(options || {});
         this.model = model;
         this.context = context;
+        this.model.on('moved', this.update.bind(this));
         this.update();
     };
     LineView.prototype.update = function(){
