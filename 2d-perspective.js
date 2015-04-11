@@ -66,8 +66,8 @@
         this.emit('orientated', this.orientation, oldOrientation);
     };
 
-    var Eye = perspective.Eye = function(x, y, orientation){
-        Entity.call(this, x, y, orientation);
+    var Eye = perspective.Eye = function(){
+        Entity.call(this, 0, 0, 0);
     };
     Eye.prototype = Object.create(Entity.prototype);
     Eye.prototype.constructor = Eye;

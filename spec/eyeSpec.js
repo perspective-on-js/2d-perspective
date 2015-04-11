@@ -4,6 +4,6 @@ describe('Eye', function(){
     });
 
     it('should be an \'Entity\'', function(){
-        expect((new perspective.Eye(0,0,0) instanceof perspective.Entity)).toBeTruthy();
+        expect((new perspective.Eye() instanceof perspective.Entity)).toBeTruthy();
     });
 });
