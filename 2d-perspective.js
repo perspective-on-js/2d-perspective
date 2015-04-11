@@ -1,5 +1,18 @@
 ;(function(perspective, undefined){
     /* A 2d model to explain perspective */
+    function extend(){
+        var result = {};
+        Array.prototype.slice.call(arguments).forEach(function(data){
+            for (var key in data) {
+                if (result[key] === undefined) {
+                    result[key] = data[key];
+                }
+            }
+        });
+
+        return result;
+    }
+
     var Observable = perspective.Observable = function(){
         this.observers = {};
     };
@@ -95,5 +108,52 @@
         var oldWidth = this.width;
         this.width = width;
         this.emit('resized', this.width, oldWidth);
+    };
+
+    var EyeView = perspective.EyeView = function(model, context, options){
+        this.options = extend(options || {}, { radius: 5 });
+        this.model = model;
+        this.context = context;
+        this.update();
+    };
+    EyeView.prototype.update = function(){
+        var context = this.context;
+        context.beginPath();
+        context.arc(this.model.x, this.model.y, this.options.radius, 0, 2*Math.PI);
+        context.fill();
+    };
+
+    var ScreenView = perspective.ScreenView = function(model, context, options){
+        this.options = extend(options || {}, { width: 100 });
+        this.model = model;
+        this.context = context;
+        this.update();
+    };
+    ScreenView.prototype.update = function(){
+        var context = this.context;
+        context.beginPath()
+        context.moveTo(
+            this.model.x - this.options.width * Math.sin(this.model.orientation),
+            this.model.y - this.options.width * Math.cos(this.model.orientation));
+        context.lineTo(
+            this.model.x + this.options.width * Math.sin(this.model.orientation),
+            this.model.y + this.options.width * Math.cos(this.model.orientation));
+        context.stroke();
+    };
+
+    var LineView = perspective.LineView = function(model, context, options){
+        this.options = extend(options || {});
+        this.model = model;
+        this.context = context;
+        this.update();
+    };
+    LineView.prototype.update = function(){
+        var context = this.context;
+        var x = this.model.x, y = this.model.y, width = this.model.width, orientation = this.model.orientation;
+        context.beginPath();
+        context.moveTo(x - width/2 * Math.sin(orientation), y - width/2 * Math.cos(orientation));
+        context.lineTo(x + width/2 * Math.sin(orientation), y + width/2 * Math.cos(orientation));
+        context.stroke();
+
     };
 })(window.perspective = window.perspective || {})

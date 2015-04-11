@@ -15,23 +15,11 @@
     context.scale(1, -1);
 
     var eye = new perspective.Eye(0, 0, 0);
-
-    context.beginPath();
-    context.arc(eye.x, eye.y, options.eye.radius, 0, 2*Math.PI);
-    context.fill();
+    new perspective.EyeView(eye, context, options.eye);
 
     var screen = new perspective.Screen(50)
-
-    context.beginPath()
-    context.moveTo(screen.x - options.screen.width * Math.sin(screen.orientation), screen.y - options.screen.width * Math.cos(screen.orientation));
-    context.lineTo(screen.x + options.screen.width * Math.sin(screen.orientation), screen.y + options.screen.width * Math.cos(screen.orientation));
-    context.stroke();
+    new perspective.ScreenView(screen, context, options.screen);
 
     var line = new perspective.Line(-100, 300, Math.PI/2, 50);
-
-    context.beginPath()
-    context.moveTo(line.x - line.width/2 * Math.sin(line.orientation), line.y - line.width/2 * Math.cos(line.orientation));
-    context.lineTo(line.x + line.width/2 * Math.sin(line.orientation), line.y + line.width/2 * Math.cos(line.orientation));
-    context.stroke();
-
+    new perspective.LineView(line, context, options.line);
 })(perspective);
