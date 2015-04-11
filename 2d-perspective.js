@@ -77,4 +77,23 @@
     };
     Screen.prototype = Object.create(Entity.prototype);
     Screen.prototype.constructor = Screen;
+
+    function throwOnInvalidLineArguments(width){
+        throwOnMissingArgument(width);
+        throwOnNonNumberArgument(width);
+    };
+
+    var Line = perspective.Line = function(x, y, orientation, width){
+        Entity.call(this, x, y, orientation);
+        throwOnInvalidLineArguments(width);
+        this.width = width;
+    };
+    Line.prototype = Object.create(Entity.prototype);
+    Line.prototype.constructor = Line;
+    Line.prototype.resizeTo = function(width){
+        throwOnInvalidLineArguments(width);
+        var oldWidth = this.width;
+        this.width = width;
+        this.emit('resized', this.width, oldWidth);
+    };
 })(window.perspective = window.perspective || {})
