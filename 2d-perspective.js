@@ -71,4 +71,10 @@
     };
     Eye.prototype = Object.create(Entity.prototype);
     Eye.prototype.constructor = Eye;
+
+    var Screen = perspective.Screen = function(y){
+        Entity.call(this, 0, y, Math.PI/2);
+    };
+    Screen.prototype = Object.create(Entity.prototype);
+    Screen.prototype.constructor = Screen;
 })(window.perspective = window.perspective || {})
