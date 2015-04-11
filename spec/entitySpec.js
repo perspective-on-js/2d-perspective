@@ -93,6 +93,6 @@ describe('Entity', function(){
                 expect(actualOrientation).toBe(Math.PI);
                 expect(actualOldOrientation).toBe(0);
             });
-});
+        });
     });
 });

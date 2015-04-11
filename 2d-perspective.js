@@ -65,4 +65,10 @@
         this.orientation = orientation;
         this.emit('orientated', this.orientation, oldOrientation);
     };
+
+    var Eye = perspective.Eye = function(x, y, orientation){
+        Entity.call(this, x, y, orientation);
+    };
+    Eye.prototype = Object.create(Entity.prototype);
+    Eye.prototype.constructor = Eye;
 })(window.perspective = window.perspective || {})
