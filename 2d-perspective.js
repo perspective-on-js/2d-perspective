@@ -110,6 +110,18 @@
         this.emit('resized', this.width, oldWidth);
     };
 
+    var Scene = perspective.Scene = function(y){
+        Observable.call(this);
+        this.eye = new Eye(0, 0, 0);
+        this.screen = new Screen(y);
+        this.lines = [];
+    };
+    Scene.prototype = Object.create(Observable.prototype);
+    Scene.prototype.constructor = Scene;
+    Scene.prototype.addLine = function(x, y, orientation, width){
+        this.lines.push(new Line(x, y, orientation, width));
+    };
+
     var EyeView = perspective.EyeView = function(model, context, options){
         this.options = extend(options || {}, { radius: 5 });
         this.model = model;
@@ -158,5 +170,38 @@
         context.lineTo(x + width/2 * Math.sin(orientation), y + width/2 * Math.cos(orientation));
         context.stroke();
 
+    };
+
+    var BackgroundView = function(context, options){
+        console.log(context);
+        this.options = extend(options || {}, { width: 640 }, { height: 480 });
+        this.context = context;
+        this.update();
+    };
+    BackgroundView.prototype.update = function(){
+        this.context.clearRect(0, 0, this.options.width, this.options.height);
+    };
+
+    var SceneView = perspective.SceneView = function(model, context, options){
+        this.options = extend(options || {});
+        this.model = model;
+        this.context = context;
+        this.initialize();
+        this.update();
+    };
+    SceneView.prototype.initialize = function(){
+        this.views = [
+            new BackgroundView(this.context, this.options.background),
+            new EyeView(this.model.eye, this.context, this.options.eye),
+            new ScreenView(this.model.screen, this.context, this.options.screen)
+        ];
+        this.model.lines.forEach(function(line){
+            this.views.push(new LineView(line, this.context, this.options.line));
+        }.bind(this));
+    };
+    SceneView.prototype.update = function(){
+        this.views.forEach(function(view){
+            view.update();
+        });
     };
 })(window.perspective = window.perspective || {})
