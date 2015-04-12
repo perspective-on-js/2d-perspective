@@ -173,13 +173,14 @@
     };
 
     var BackgroundView = function(context, options){
-        console.log(context);
         this.options = extend(options || {}, { width: 640 }, { height: 480 });
         this.context = context;
         this.update();
     };
     BackgroundView.prototype.update = function(){
-        this.context.clearRect(0, 0, this.options.width, this.options.height);
+        this.context.clearRect(
+                -this.options.width, -this.options.height,
+            2 * this.options.width, 2 * this.options.height);
     };
 
     var SceneView = perspective.SceneView = function(model, context, options){
@@ -187,6 +188,7 @@
         this.model = model;
         this.context = context;
         this.initialize();
+        this.wire();
         this.update();
     };
     SceneView.prototype.initialize = function(){
@@ -198,6 +200,14 @@
         this.model.lines.forEach(function(line){
             this.views.push(new LineView(line, this.context, this.options.line));
         }.bind(this));
+    };
+    SceneView.prototype.wire = function(){
+        var update = this.update.bind(this);
+        this.model.eye.on('moved', update);
+        this.model.screen.on('moved', update);
+        this.model.lines.forEach(function(line){
+            line.on('moved', update);
+        });
     };
     SceneView.prototype.update = function(){
         this.views.forEach(function(view){
