@@ -131,9 +131,19 @@
         });
     };
     Projection.prototype.update = function(){
+        var normalOrientation = this.screen.orientation - Math.PI/2;
+        var normal = {
+            'x': Math.sin(normalOrientation),
+            'y': Math.cos(normalOrientation)
+        };
+        var dotLine = normal.x * this.line.x + normal.y * this.line.y;
+        var dx = this.line.x - dotLine * normal.x;
+        var dy = this.line.y - dotLine * normal.y;
+        var dotScreen = normal.x * this.screen.x + normal.y * this.screen.y;
+        var k = dotScreen / dotLine;
         this.orientateTo(this.screen.orientation);
-        this.placeAt(0, 0);
-        this.resizeTo(25);
+        this.placeAt(normal.x * dotScreen + dx * k, normal.y * dotScreen + dy * k);
+        this.resizeTo(this.line.width * k);
     };
 
     var Scene = perspective.Scene = function(y){
@@ -186,7 +196,7 @@
     };
 
     var LineView = perspective.LineView = function(model, context, options){
-        this.options = extend(options || {});
+        this.options = extend(options || { lineWidth: 3 });
         this.model = model;
         this.context = context;
         this.model.on('moved', this.update.bind(this));
@@ -195,10 +205,13 @@
     LineView.prototype.update = function(){
         var context = this.context;
         var x = this.model.x, y = this.model.y, width = this.model.width, orientation = this.model.orientation;
+        context.save();
+        context.lineWidth = this.options.lineWidth;
         context.beginPath();
         context.moveTo(x - width/2 * Math.sin(orientation), y - width/2 * Math.cos(orientation));
         context.lineTo(x + width/2 * Math.sin(orientation), y + width/2 * Math.cos(orientation));
         context.stroke();
+        context.restore();
 
     };
 
