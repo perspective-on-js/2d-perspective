@@ -136,15 +136,42 @@
             'x': Math.sin(normalOrientation),
             'y': Math.cos(normalOrientation)
         };
-        var dotLine = normal.x * this.line.x + normal.y * this.line.y;
-        var dx = this.line.x - dotLine * normal.x;
-        var dy = this.line.y - dotLine * normal.y;
+        var l = this.parallelDisplacement(normal, {
+            'x': this.line.x - Math.sin(this.line.orientation) * this.line.width/2,
+            'y': this.line.y - Math.cos(this.line.orientation) * this.line.width/2
+        });
+        var r = this.parallelDisplacement(normal, {
+            'x': this.line.x + Math.sin(this.line.orientation) * this.line.width/2,
+            'y': this.line.y + Math.cos(this.line.orientation) * this.line.width/2
+        });
         var dotScreen = normal.x * this.screen.x + normal.y * this.screen.y;
-        var k = dotScreen / dotLine;
+        var lk = dotScreen / l.dot;
+        var lp = {
+            'x': normal.x * dotScreen + l.x * lk,
+            'y': normal.y * dotScreen + l.y * lk
+        };
+        var rk = dotScreen / r.dot;
+        var rp = {
+            'x': normal.x * dotScreen + r.x * rk,
+            'y': normal.y * dotScreen + r.y * rk
+        };
+        var c = {
+            'x': (rp.x + lp.x)/2,
+            'y': (rp.y + lp.y)/2
+        };
+        var width = Math.sqrt(Math.pow(rp.x - lp.x, 2) + Math.pow(rp.y - lp.y, 2));
         this.orientateTo(this.screen.orientation);
-        this.placeAt(normal.x * dotScreen + dx * k, normal.y * dotScreen + dy * k);
-        this.resizeTo(this.line.width * k);
+        this.placeAt(c.x, c.y);
+        this.resizeTo(width);
     };
+    Projection.prototype.parallelDisplacement = function(normal, position){
+        var dot = normal.x * position.x + normal.y * position.y;
+        return {
+            'dot': dot,
+            'x': position.x - dot * normal.x,
+            'y': position.y - dot * normal.y
+        };
+    }
 
     var Scene = perspective.Scene = function(y){
         Observable.call(this);
