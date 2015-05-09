@@ -110,6 +110,32 @@
         this.emit('resized', this.width, oldWidth);
     };
 
+    var Projection = perspective.Projection = function(eye, screen, line){
+        throwOnMissingArgument(eye);
+        throwOnMissingArgument(screen);
+        throwOnMissingArgument(line);
+        Line.call(this, 0, 0, screen.orientation, line.width);
+        this.eye = eye;
+        this.screen = screen;
+        this.line = line;
+        this.wire();
+        this.update();
+    };
+    Projection.prototype = Object.create(Line.prototype);
+    Projection.prototype.wire = function(){
+        var update = this.update.bind(this);
+        [this.eye, this.screen, this.line].forEach(function(observable){
+            ['moved', 'orientated', 'resized'].forEach(function(event){
+                observable.on(event, update);
+            });
+        });
+    };
+    Projection.prototype.update = function(){
+        this.orientateTo(this.screen.orientation);
+        this.placeAt(0, 0);
+        this.resizeTo(25);
+    };
+
     var Scene = perspective.Scene = function(y){
         Observable.call(this);
         this.eye = new Eye(0, 0, 0);
@@ -119,7 +145,10 @@
     Scene.prototype = Object.create(Observable.prototype);
     Scene.prototype.constructor = Scene;
     Scene.prototype.addLine = function(x, y, orientation, width){
-        this.lines.push(new Line(x, y, orientation, width));
+        var line = new Line(x, y, orientation, width);
+        var projection = new Projection(this.eye, this.screen, line);
+        this.lines.push(line);
+        this.lines.push(projection);
     };
 
     var EyeView = perspective.EyeView = function(model, context, options){
