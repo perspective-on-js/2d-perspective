@@ -103,6 +103,18 @@
     };
     Line.prototype = Object.create(Entity.prototype);
     Line.prototype.constructor = Line;
+    Line.prototype.left = function(){
+        return {
+            'x': this.x - Math.sin(this.orientation) * this.width/2,
+            'y': this.y - Math.cos(this.orientation) * this.width/2
+        };
+    };
+    Line.prototype.right = function(){
+        return {
+            'x': this.x + Math.sin(this.orientation) * this.width/2,
+            'y': this.y + Math.cos(this.orientation) * this.width/2
+        };
+    };
     Line.prototype.resizeTo = function(width){
         throwOnInvalidLineArguments(width);
         var oldWidth = this.width;
@@ -136,14 +148,8 @@
             'x': Math.sin(normalOrientation),
             'y': Math.cos(normalOrientation)
         };
-        var l = this.parallelDisplacement(normal, {
-            'x': this.line.x - Math.sin(this.line.orientation) * this.line.width/2,
-            'y': this.line.y - Math.cos(this.line.orientation) * this.line.width/2
-        });
-        var r = this.parallelDisplacement(normal, {
-            'x': this.line.x + Math.sin(this.line.orientation) * this.line.width/2,
-            'y': this.line.y + Math.cos(this.line.orientation) * this.line.width/2
-        });
+        var l = this.parallelDisplacement(normal, this.line.left());
+        var r = this.parallelDisplacement(normal, this.line.right());
         var dotScreen = normal.x * this.screen.x + normal.y * this.screen.y;
         var lk = dotScreen / l.dot;
         var lp = {
