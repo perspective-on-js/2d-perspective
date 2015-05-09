@@ -149,6 +149,7 @@
         var projection = new Projection(this.eye, this.screen, line);
         this.lines.push(line);
         this.lines.push(projection);
+        return line;
     };
 
     var EyeView = perspective.EyeView = function(model, context, options){
